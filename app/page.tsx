@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { supabase } from "../lib/supabase";
 
@@ -110,27 +112,43 @@ function Card({ p }: { p: Project }) {
 export default async function Home({
   searchParams,
 }: {
-  searchParams?: { q?: string; t?: string };
+  searchParams?: { q?: string };
 }) {
   const q = (searchParams?.q ?? "").trim();
-  const t = (searchParams?.t ?? "ALL").toUpperCase(); // ALL | POINTS | REWARD
 
-  // 先取最新的 50 条（足够做首页展示），再在服务端做简单过滤
-  const { data, error } = await supabase
-    .from("projects")
-    .select("*")
-    .eq("status", "ACTIVE")
-    .order("updated_at", { ascending: false })
-    .limit(50);
+  // 首页只展示“最新”内容：每类各 10 条（你可以改成 20）
+  const [{ data: rewards, error: err1 }, { data: points, error: err2 }] =
+    await Promise.all([
+      supabase
+        .from("projects")
+        .select("*")
+        .eq("status", "ACTIVE")
+        .eq("type", "REWARD")
+        .order("updated_at", { ascending: false })
+        .limit(10),
+      supabase
+        .from("projects")
+        .select("*")
+        .eq("status", "ACTIVE")
+        .eq("type", "POINTS")
+        .order("updated_at", { ascending: false })
+        .limit(10),
+    ]);
 
-  let list = (data ?? []) as Project[];
+  const error = err1 ?? err2;
 
-  if (t === "POINTS") list = list.filter((x) => x.type === "POINTS");
-  if (t === "REWARD") list = list.filter((x) => x.type === "REWARD");
+  let rewardList = (rewards ?? []) as Project[];
+  let pointsList = (points ?? []) as Project[];
 
+  // 搜索：在首页只搜索“最新这两组”
   if (q) {
     const ql = q.toLowerCase();
-    list = list.filter(
+    rewardList = rewardList.filter(
+      (x) =>
+        (x.name ?? "").toLowerCase().includes(ql) ||
+        (x.summary ?? "").toLowerCase().includes(ql)
+    );
+    pointsList = pointsList.filter(
       (x) =>
         (x.name ?? "").toLowerCase().includes(ql) ||
         (x.summary ?? "").toLowerCase().includes(ql)
@@ -141,57 +159,57 @@ export default async function Home({
     <main style={{ padding: 40, maxWidth: 980, margin: "0 auto" }}>
       <h1 style={{ fontSize: 28, marginBottom: 8 }}>Web3 空投活动导航</h1>
       <div style={{ color: "#666", lineHeight: 1.6 }}>
-        按更新时间展示最新活动。点击「去参与」会默认使用你的邀请码链接。
+        首页展示最新活动。点击「去参与」会默认使用你的邀请码链接。
       </div>
 
+      {/* 顶部导航：直接跳转到“完整列表页” */}
       <div style={{ marginTop: 18, display: "flex", gap: 10, flexWrap: "wrap" }}>
-        <a
-          href="/?t=ALL"
+        <Link
+          href="/"
           style={{
             padding: "8px 12px",
             borderRadius: 999,
             border: "1px solid #ddd",
             textDecoration: "none",
-            fontWeight: t === "ALL" ? 800 : 500,
+            fontWeight: 800,
           }}
         >
           全部
-        </a>
-        <a
-          href="/?t=REWARD"
+        </Link>
+        <Link
+          href="/rewards"
           style={{
             padding: "8px 12px",
             borderRadius: 999,
             border: "1px solid #ddd",
             textDecoration: "none",
-            fontWeight: t === "REWARD" ? 800 : 500,
+            fontWeight: 700,
           }}
         >
           🟩 短期奖励
-        </a>
-        <a
-          href="/?t=POINTS"
+        </Link>
+        <Link
+          href="/points"
           style={{
             padding: "8px 12px",
             borderRadius: 999,
             border: "1px solid #ddd",
             textDecoration: "none",
-            fontWeight: t === "POINTS" ? 800 : 500,
+            fontWeight: 700,
           }}
         >
           🟦 积分项目
-        </a>
+        </Link>
 
         <form
           action="/"
           method="get"
           style={{ marginLeft: "auto", display: "flex", gap: 8, flexWrap: "wrap" }}
         >
-          <input type="hidden" name="t" value={t} />
           <input
             name="q"
             defaultValue={q}
-            placeholder="搜索项目名/简介（如：points / usdt / galxe）"
+            placeholder="搜索（仅在首页最新区内搜索）"
             style={{
               width: 360,
               maxWidth: "80vw",
@@ -223,11 +241,41 @@ export default async function Home({
         </pre>
       ) : null}
 
-      <div style={{ marginTop: 20, display: "grid", gap: 12 }}>
-        {list.map((p) => (
-          <Card key={p.id} p={p} />
-        ))}
-      </div>
+      {/* 最新短期奖励 */}
+      <section style={{ marginTop: 22 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <h2 style={{ margin: 0 }}>🟩 最新短期奖励</h2>
+          <Link href="/rewards" style={{ textDecoration: "none" }}>
+            查看全部 →
+          </Link>
+        </div>
+        <div style={{ marginTop: 12, display: "grid", gap: 12 }}>
+          {rewardList.map((p) => (
+            <Card key={p.id} p={p} />
+          ))}
+          {rewardList.length === 0 ? (
+            <div style={{ color: "#999" }}>暂无短期奖励项目</div>
+          ) : null}
+        </div>
+      </section>
+
+      {/* 最新积分项目 */}
+      <section style={{ marginTop: 26 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <h2 style={{ margin: 0 }}>🟦 最新积分项目</h2>
+          <Link href="/points" style={{ textDecoration: "none" }}>
+            查看全部 →
+          </Link>
+        </div>
+        <div style={{ marginTop: 12, display: "grid", gap: 12 }}>
+          {pointsList.map((p) => (
+            <Card key={p.id} p={p} />
+          ))}
+          {pointsList.length === 0 ? (
+            <div style={{ color: "#999" }}>暂无积分项目</div>
+          ) : null}
+        </div>
+      </section>
 
       <div style={{ marginTop: 22, fontSize: 12, color: "#999" }}>
         提醒：请核对官方来源，小额测试，谨防钓鱼链接与恶意授权。
