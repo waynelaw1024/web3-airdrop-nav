@@ -69,7 +69,7 @@ function Card({ p }: { p: Project }) {
               fontWeight: 700,
             }}
           >
-            👉 去参与（邀请码）
+            👉 去参与
           </a>
         ) : (
           <span style={{ color: "crimson" }}>缺少 referral_url</span>
@@ -116,7 +116,7 @@ export default async function Home({
 }) {
   const q = (searchParams?.q ?? "").trim();
 
-  // 首页只展示“最新”内容：每类各 10 条（你可以改成 20）
+  // 首页只展示“最新”内容：每类各 3 条（你可以改成 20）
   const [{ data: rewards, error: err1 }, { data: points, error: err2 }] =
     await Promise.all([
       supabase
@@ -125,14 +125,14 @@ export default async function Home({
         .eq("status", "ACTIVE")
         .eq("type", "REWARD")
         .order("updated_at", { ascending: false })
-        .limit(10),
+        .limit(3),
       supabase
         .from("projects")
         .select("*")
         .eq("status", "ACTIVE")
         .eq("type", "POINTS")
         .order("updated_at", { ascending: false })
-        .limit(10),
+        .limit(3),
     ]);
 
   const error = err1 ?? err2;
@@ -249,14 +249,30 @@ export default async function Home({
             查看全部 →
           </Link>
         </div>
-        <div style={{ marginTop: 12, display: "grid", gap: 12 }}>
-          {rewardList.map((p) => (
-            <Card key={p.id} p={p} />
-          ))}
-          {rewardList.length === 0 ? (
-            <div style={{ color: "#999" }}>暂无短期奖励项目</div>
-          ) : null}
-        </div>
+<div style={{ marginTop: 12, display: "grid", gap: 12 }}>
+  {rewardList.map((p) => (
+    <Card key={p.id} p={p} />
+  ))}
+
+  {rewardList.length === 0 ? (
+    <div style={{ color: "#999" }}>暂无短期奖励项目</div>
+  ) : (
+    <Link
+      href="/rewards"
+      style={{
+        display: "block",
+        padding: 14,
+        borderRadius: 12,
+        border: "1px dashed #ddd",
+        textDecoration: "none",
+        color: "#333",
+      }}
+    >
+      更多短期奖励，点击进入该板块 →
+    </Link>
+  )}
+</div>
+
       </section>
 
       {/* 最新积分项目 */}
@@ -267,14 +283,30 @@ export default async function Home({
             查看全部 →
           </Link>
         </div>
-        <div style={{ marginTop: 12, display: "grid", gap: 12 }}>
-          {pointsList.map((p) => (
-            <Card key={p.id} p={p} />
-          ))}
-          {pointsList.length === 0 ? (
-            <div style={{ color: "#999" }}>暂无积分项目</div>
-          ) : null}
-        </div>
+       <div style={{ marginTop: 12, display: "grid", gap: 12 }}>
+  {pointsList.map((p) => (
+    <Card key={p.id} p={p} />
+  ))}
+
+  {pointsList.length === 0 ? (
+    <div style={{ color: "#999" }}>暂无积分项目</div>
+  ) : (
+    <Link
+      href="/points"
+      style={{
+        display: "block",
+        padding: 14,
+        borderRadius: 12,
+        border: "1px dashed #ddd",
+        textDecoration: "none",
+        color: "#333",
+      }}
+    >
+      更多最新积分项目，点击进入该板块 →
+    </Link>
+  )}
+</div>
+
       </section>
 
       <div style={{ marginTop: 22, fontSize: 12, color: "#999" }}>
