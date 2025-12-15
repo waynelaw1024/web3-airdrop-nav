@@ -159,7 +159,7 @@ export default async function Home({
     <main style={{ padding: 40, maxWidth: 980, margin: "0 auto" }}>
       <h1 style={{ fontSize: 28, marginBottom: 8 }}>Web3 空投活动导航</h1>
       <div style={{ color: "#666", lineHeight: 1.6 }}>
-        首页展示最新活动。点击「去参与」会默认使用你的邀请码链接。
+        首页展示最新活动。
       </div>
 
       {/* 顶部导航：直接跳转到“完整列表页” */}
@@ -201,7 +201,7 @@ export default async function Home({
           🟦 积分项目
         </Link>
 
-        <form
+        <
           action="/"
           method="get"
           style={{ marginLeft: "auto", display: "flex", gap: 8, flexWrap: "wrap" }}
@@ -232,7 +232,7 @@ export default async function Home({
           >
             搜索
           </button>
-        </form>
+        </>
       </div>
 
       {error ? (
@@ -257,19 +257,21 @@ export default async function Home({
   {rewardList.length === 0 ? (
     <div style={{ color: "#999" }}>暂无短期奖励项目</div>
   ) : (
-    <Link
-      href="/rewards"
-      style={{
-        display: "block",
-        padding: 14,
-        borderRadius: 12,
-        border: "1px dashed #ddd",
-        textDecoration: "none",
-        color: "#333",
-      }}
-    >
-      更多短期奖励，点击进入该板块 →
-    </Link>
+   <Link
+  href="/rewards"
+  style={{
+    display: "block",
+    padding: 16,
+    borderRadius: 14,
+    textDecoration: "none",
+    fontWeight: 800,
+    border: "1px solid #bbf7d0",
+    background: "linear-gradient(135deg, #ecfdf5, #f0fdf4)",
+  }}
+>
+  更多短期奖励，点击进入该板块 →
+</Link>
+
   )}
 </div>
 
@@ -291,19 +293,21 @@ export default async function Home({
   {pointsList.length === 0 ? (
     <div style={{ color: "#999" }}>暂无积分项目</div>
   ) : (
-    <Link
-      href="/points"
-      style={{
-        display: "block",
-        padding: 14,
-        borderRadius: 12,
-        border: "1px dashed #ddd",
-        textDecoration: "none",
-        color: "#333",
-      }}
-    >
-      更多最新积分项目，点击进入该板块 →
-    </Link>
+  <Link
+  href="/points"
+  style={{
+    display: "block",
+    padding: 16,
+    borderRadius: 14,
+    textDecoration: "none",
+    fontWeight: 800,
+    border: "1px solid #bfdbfe",
+    background: "linear-gradient(135deg, #eff6ff, #eef2ff)",
+  }}
+>
+  更多最新积分项目，点击进入该板块 →
+</Link>
+
   )}
 </div>
 
