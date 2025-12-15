@@ -201,38 +201,38 @@ export default async function Home({
           🟦 积分项目
         </Link>
 
-        <
-          action="/"
-          method="get"
-          style={{ marginLeft: "auto", display: "flex", gap: 8, flexWrap: "wrap" }}
-        >
-          <input
-            name="q"
-            defaultValue={q}
-            placeholder="搜索（仅在首页最新区内搜索）"
-            style={{
-              width: 360,
-              maxWidth: "80vw",
-              padding: "10px 12px",
-              borderRadius: 10,
-              border: "1px solid #ddd",
-            }}
-          />
-          <button
-            type="submit"
-            style={{
-              padding: "10px 14px",
-              borderRadius: 10,
-              border: "1px solid #111",
-              background: "#111",
-              color: "#fff",
-              cursor: "pointer",
-              fontWeight: 700,
-            }}
-          >
-            搜索
-          </button>
-        </>
+        <form
+  action="/search"
+  method="get"
+  style={{ marginLeft: "auto", display: "flex", gap: 8, flexWrap: "wrap" }}
+>
+  <input
+    name="q"
+    defaultValue={q}
+    placeholder="搜索项目名/简介（全站搜索）"
+    style={{
+      width: 360,
+      maxWidth: "80vw",
+      padding: "10px 12px",
+      borderRadius: 10,
+      border: "1px solid #ddd",
+    }}
+  />
+  <button
+    type="submit"
+    style={{
+      padding: "10px 14px",
+      borderRadius: 10,
+      border: "1px solid #111",
+      background: "#111",
+      color: "#fff",
+      cursor: "pointer",
+      fontWeight: 700,
+    }}
+  >
+    搜索
+  </button>
+</form>
       </div>
 
       {error ? (
