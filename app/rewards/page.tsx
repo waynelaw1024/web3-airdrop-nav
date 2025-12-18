@@ -50,13 +50,45 @@ export default async function RewardsPage() {
             )}
 
             <div style={{ marginTop: 10 }}>
-              <a
-                href={p.referral_url}
-                target="_blank"
-                rel="noreferrer"
-              >
-                👉 去参与（邀请码）
-              </a>
+    <div style={{ marginTop: 12, display: "flex", gap: 12, flexWrap: "wrap" }}>
+  {p.referral_url ? (
+    <a
+      href={p.referral_url}
+      target="_blank"
+      rel="noreferrer"
+      style={{
+        display: "inline-block",
+        padding: "10px 14px",
+        borderRadius: 10,
+        border: "1px solid #111",
+        textDecoration: "none",
+        fontWeight: 700,
+      }}
+    >
+      👉 去参与
+    </a>
+  ) : (
+    <span style={{ color: "crimson" }}>缺少 referral_url</span>
+  )}
+
+  {p.source_url ? (
+    <a
+      href={p.source_url}
+      target="_blank"
+      rel="noreferrer"
+      style={{
+        display: "inline-block",
+        padding: "10px 14px",
+        borderRadius: 10,
+        border: "1px solid #ddd",
+        textDecoration: "none",
+      }}
+    >
+      来源
+    </a>
+  ) : null}
+</div>
+
             </div>
           </div>
         ))}
