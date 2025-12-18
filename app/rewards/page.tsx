@@ -1,7 +1,7 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import Link from "next/link";
 import { supabase } from "../../lib/supabase";
-
-
 export default async function RewardsPage() {
   const { data, error } = await supabase
     .from("projects")
