@@ -33,7 +33,7 @@ export default async function PointsPage() {
             <div style={{ color: "#666", marginTop: 6 }}>{p.summary}</div>
             <div style={{ marginTop: 10, display: "flex", gap: 12 }}>
               <a href={p.referral_url} target="_blank" rel="noreferrer">
-                去参与（邀请码）
+                去参与
               </a>
               {p.source_url ? (
                 <a href={p.source_url} target="_blank" rel="noreferrer">
